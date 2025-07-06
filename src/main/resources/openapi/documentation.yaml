@@ -1,0 +1,311 @@
+openapi: "3.0.3"
+info:
+  title: "Task Management API"
+  description: "A simple task management API for creating, reading, updating, and deleting tasks"
+  version: "1.0.0"
+  contact:
+    name: "API Support"
+    email: "support@example.com"
+servers:
+  - url: "http://0.0.0.0:8080"
+    description: "Development server"
+paths:
+  /:
+    get:
+      summary: "Root endpoint"
+      description: "Simple hello world endpoint"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+                example: "Hello World!"
+
+  /home:
+    get:
+      summary: "API documentation home page"
+      description: "HTML page with links to API documentation and endpoints"
+      responses:
+        "200":
+          description: "HTML page"
+          content:
+            text/html:
+              schema:
+                type: "string"
+
+  /api/health:
+    get:
+      summary: "Health check"
+      description: "Check if the API service is running"
+      responses:
+        "200":
+          description: "Service is healthy"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/tasks:
+    get:
+      summary: "Get all tasks"
+      description: "Retrieve a list of all tasks"
+      responses:
+        "200":
+          description: "List of tasks"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+
+    post:
+      summary: "Create a new task"
+      description: "Create a new task with title and description"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        "201":
+          description: "Task created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        "400":
+          description: "Invalid request body"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/tasks/{id}:
+    get:
+      summary: "Get task by ID"
+      description: "Retrieve a specific task by its ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "Task ID"
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: "Task found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        "400":
+          description: "Invalid task ID"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: "Update task"
+      description: "Update an existing task (partial update supported)"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "Task ID"
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        "200":
+          description: "Task updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        "400":
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: "Delete task"
+      description: "Delete a task by its ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "Task ID"
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: "Task deleted successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          description: "Invalid task ID"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: "Task not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - completed
+      properties:
+        id:
+          type: integer
+          description: "Unique identifier for the task"
+          example: 1
+        title:
+          type: string
+          description: "Task title"
+          example: "Complete project documentation"
+        description:
+          type: string
+          description: "Detailed description of the task"
+          example: "Write comprehensive API documentation with examples"
+        completed:
+          type: boolean
+          description: "Whether the task is completed"
+          example: false
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+          description: "Task title"
+          example: "Complete project documentation"
+        description:
+          type: string
+          description: "Detailed description of the task"
+          example: "Write comprehensive API documentation with examples"
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: "Updated task title"
+          example: "Complete project documentation (updated)"
+        description:
+          type: string
+          description: "Updated task description"
+          example: "Write comprehensive API documentation with examples and testing"
+        completed:
+          type: boolean
+          description: "Updated completion status"
+          example: true
+
+    ApiResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: "Whether the operation was successful"
+        message:
+          type: string
+          description: "Optional message about the operation"
+
+    TaskResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Task'
+
+    TaskListResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+
+    HealthResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "healthy"
+                timestamp:
+                  type: integer
+                  format: int64
+                  example: 1672531200000
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            success:
+              type: boolean
+              example: false
+            message:
+              type: string
+              example: "Task not found"
+
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            success:
+              type: boolean
+              example: true
+            message:
+              type: string
+              example: "Task deleted successfully"

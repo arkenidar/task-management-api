@@ -1,0 +1,10 @@
+ktor:
+    application:
+        modules:
+            - com.arkenidar.ApplicationKt.module
+    deployment:
+        port: 8080
+    development: true
+    watch:
+        - classes
+        - resources

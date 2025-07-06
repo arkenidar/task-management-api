@@ -1,0 +1,12 @@
+build/
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+*.md
+.git/
+.gitignore
+src/test/
+*.log
+*.tmp
+
