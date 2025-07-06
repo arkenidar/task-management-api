@@ -1,3 +1,65 @@
+# Task Management API
+
+![CI/CD Pipeline](https://github.com/arkenidar/task-management-api/actions/workflows/ci-cd.yml/badge.svg)
+![Deploy to VPS](https://github.com/arkenidar/task-management-api/actions/workflows/deploy.yml/badge.svg)
+
+Una REST API completa per la gestione di task, costruita con Ktor e Kotlin. Include deployment automatico su VPS con SSL/HTTPS.
+
+## 🚀 Funzionalità
+
+- **CRUD completo** per task management
+- **Autenticazione e sicurezza** con headers di sicurezza
+- **Rate limiting** per proteggere l'API
+- **SSL/HTTPS** automatico con Let's Encrypt
+- **Docker** containerizzazione completa
+- **GitHub Actions** CI/CD automation
+- **Health checks** e monitoring
+- **Documentazione OpenAPI/Swagger**
+
+## 📋 Endpoints API
+
+- `GET /api/tasks` - Ottieni tutti i task
+- `POST /api/tasks` - Crea un nuovo task
+- `GET /api/tasks/{id}` - Ottieni un task specifico
+- `PUT /api/tasks/{id}` - Aggiorna un task
+- `DELETE /api/tasks/{id}` - Elimina un task
+- `GET /api/health` - Health check
+- `GET /home` - Informazioni API
+
+## 🛠️ Tecnologie
+
+- **Ktor** - Framework web Kotlin
+- **Kotlinx Serialization** - Serializzazione JSON
+- **Docker** - Containerizzazione
+- **Nginx** - Reverse proxy e load balancing
+- **Let's Encrypt** - Certificati SSL gratuiti
+- **GitHub Actions** - CI/CD automation
+
+## 📦 Quick Start
+
+### Sviluppo Locale
+
+```bash
+# Clona il repository
+git clone https://github.com/arkenidar/task-management-api.git
+cd task-management-api
+
+# Avvia l'applicazione
+./gradlew run
+
+# L'API sarà disponibile su http://localhost:8080
+```
+
+### Test
+
+```bash
+# Esegui tutti i test
+./gradlew test
+
+# Build del JAR
+./gradlew buildFatJar
+```
+
 # Task Management API - VPS Deployment Guide
 
 ## 🚀 Deployment su VPS con SSL/HTTPS
